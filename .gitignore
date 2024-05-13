@@ -1,0 +1,24 @@
+# 忽略 IntelliJ IDEA 生成的文件
+.idea/
+
+# 忽略编译输出
+out/
+
+# 忽略日志文件
+*.log
+
+# 忽略自动生成的文件
+*.iml
+*.ipr
+*.iws
+
+# 忽略编译生成的类文件
+*.class
+
+# 忽略项目依赖的目录
+target/
+bin/
+
+# 忽略系统文件
+.DS_Store
+Thumbs.db
