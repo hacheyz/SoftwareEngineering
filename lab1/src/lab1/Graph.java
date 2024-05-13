@@ -87,7 +87,6 @@ public class Graph {
             for (int i = 0; i<word3List.size(); ++i){
                 words = words + word3List.get(i) + " ";
             }
-            System.out.println("The bridge words from \"" + word1 + "\" to \"" + word2 + "\" are: " + words);
             return words;
         }
     }

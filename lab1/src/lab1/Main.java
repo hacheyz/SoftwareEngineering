@@ -28,12 +28,18 @@ public class Main {
 
         // 查询桥接词
         System.out.println("**********************************************");
-        String word3 = g.queryBridgeWords("to", "strange");
-        System.out.println("word3: " + word3);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入word1: ");
+        String word1 = scanner.nextLine();      // to
+        System.out.println("请输入word2: ");
+        String word2 = scanner.nextLine();      // strange
+        String bridgeWords = g.queryBridgeWords(word1, word2);
+        if(bridgeWords != null){
+            System.out.println("The bridge words from \"" + word1 + "\" to \"" + word2 + "\" are: " + bridgeWords);
+        }
 
         // 根据桥接词生成新的文本
         System.out.println("**********************************************");
-        Scanner scanner = new Scanner(System.in);
         System.out.println("请输入需要改造的文本: ");
         String inputText =  scanner.nextLine();
         String newText = g.generateNewText(inputText);
