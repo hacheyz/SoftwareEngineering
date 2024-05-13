@@ -2,7 +2,6 @@ package lab1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class Graph {
@@ -91,7 +90,7 @@ public class Graph {
         }
     }
 
-    // word1 -> word3 -> word2, return 1 word3
+    // word1 -> word3 -> word2, return 1 word3 only
     public String queryBridgeWord(String word1, String word2){
         Node node1 = getNode(word1);
         Node node2 = getNode(word2);
@@ -109,21 +108,23 @@ public class Graph {
 
         if(word3List.size() == 0){
             return null;
-        }
-        else {
-            String words = "";
-            for (int i = 0; i<word3List.size(); ++i){
-                words = words + word3List.get(i) + " ";
-            }
-            return words;
+        } else {
+            return word3List.get(0);
         }
     }
 
     public String generateNewText(String inputText){
-        // 先转化成小写
-        String inputTextLowCase = inputText.toLowerCase();
-        System.out.println(inputTextLowCase);
-        return null;
+        String[] inputWords = inputText.split("\\s+");
+        String newSentence = "";
+        for (int i = 0; i<inputWords.length - 1; ++i){
+            newSentence += inputWords[i] + " ";
+            String bridgeWord = queryBridgeWord(inputWords[i].toLowerCase(), inputWords[i+1].toLowerCase());
+            if(bridgeWord != null){
+                newSentence += (bridgeWord + " ");
+            }
+        }
+        newSentence += inputWords[inputWords.length-1];
+        return newSentence;
     }
 
     public String calcShortestPath(String word1, String word2){
