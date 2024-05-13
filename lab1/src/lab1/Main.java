@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Main {
 
+    // 功能需求2：展示有向图
     public static void showDirectedGraph(Graph G){
         System.out.println("**********************************************");
         System.out.println("有向图: ");
@@ -21,7 +22,7 @@ public class Main {
         }
         System.out.println();
 
-        // 利用words构建有向图
+        // 利用words构建有向图并展示
         Graph g = new Graph(words);
         showDirectedGraph(g);
 

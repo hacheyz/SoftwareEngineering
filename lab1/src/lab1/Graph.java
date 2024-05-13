@@ -14,6 +14,7 @@ public class Graph {
         this.edges = new HashMap<>();
     }
 
+    // 功能需求1：通过读入的文本生成有向图
     public Graph(String[] words) {
         this();
         for (int i = 0; i < words.length - 1; i++) {
@@ -60,6 +61,7 @@ public class Graph {
     }
 
     // word1 -> word3 -> word2, return word3List
+    // 功能需求3：返回所有的桥接词，如果有多个通过空格分割，再拼接
     public String queryBridgeWords(String word1, String word2){
         Node node1 = getNode(word1);
         Node node2 = getNode(word2);
@@ -91,6 +93,7 @@ public class Graph {
     }
 
     // word1 -> word3 -> word2, return 1 word3 only
+    // 如果有多个桥接词，只返回第一个，功能需求4中需要调用
     public String queryBridgeWord(String word1, String word2){
         Node node1 = getNode(word1);
         Node node2 = getNode(word2);
@@ -113,6 +116,7 @@ public class Graph {
         }
     }
 
+    // 功能需求4：根据桥接词生成新文本
     public String generateNewText(String inputText){
         String[] inputWords = inputText.split("\\s+");
         String newSentence = "";
