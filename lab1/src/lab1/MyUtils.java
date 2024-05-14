@@ -30,4 +30,14 @@ public class MyUtils {
         return wordList.toArray(new String[0]);
     }
 
+    public static void writeWalkToFile(String walk, String path) {
+        try {
+            File file = new File(path);
+            java.io.PrintWriter output = new java.io.PrintWriter(file);
+            output.print(walk);
+            output.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
