@@ -25,6 +25,8 @@ public class Main {
         // 利用words构建有向图并展示
         Graph g = new Graph(words);
         showDirectedGraph(g);
+        GraphRenderer graphRenderer = new GraphRenderer(g);
+        graphRenderer.renderGraph();
 
         // 查询桥接词
         System.out.println("**********************************************");
