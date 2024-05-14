@@ -130,8 +130,61 @@ public class Graph {
         return newSentence;
     }
 
-    public String calcShortestPath(String word1, String word2){
-        return null;
+    // 功能需求5：计算两个单词之间的最短路径
+    public String calcShortestPath(String word1, String word2) {
+        /* Use Dijkstra to find the shortest path */
+        StringBuilder path = new StringBuilder();
+        Node node1 = getNode(word1);
+        Node node2 = getNode(word2);
+        if (node1 == null || node2 == null) {
+            System.err.println("No \"" + word1 + "\" or \"" + word2 + "\" in the graph!");
+            return null;
+        }
+        Map<Node, Integer> distance = new HashMap<>();
+        Map<Node, Node> previous = new HashMap<>();
+        ArrayList<Node> visited = new ArrayList<>();
+        for (Node node : nodes.values()) {
+            distance.put(node, Integer.MAX_VALUE);
+            previous.put(node, null);
+        }
+        distance.put(node1, 0);
+        while (visited.size() < nodes.size()) {
+            // find the node with the minimum distance
+            Node minNode = null;
+            int minDistance = Integer.MAX_VALUE;
+            for (Node node : nodes.values()) {
+                if (!visited.contains(node) && distance.get(node) < minDistance) {
+                    minNode = node;
+                    minDistance = distance.get(node);
+                }
+            }
+            if (minNode == null) {
+                System.err.println("No path from \"" + word1 + "\" to \"" + word2 + "\"!");
+                return null;
+            }
+            visited.add(minNode);
+            // update the distance of the neighbors of the minNode
+            Map<Node, Integer> minNodeEdges = edges.get(minNode);
+            for (Node neighbor : minNodeEdges.keySet()) {
+                int weight = minNodeEdges.get(neighbor);
+                if (distance.get(minNode) + weight < distance.get(neighbor)) {
+                    distance.put(neighbor, distance.get(minNode) + weight);
+                    previous.put(neighbor, minNode);
+                }
+            }
+        }
+        if (distance.get(node2) == Integer.MAX_VALUE) {
+            System.err.println("No path from \"" + word1 + "\" to \"" + word2 + "\"!");
+            return null;
+        }
+        Node current = node2;
+        path.append(current.getName());
+        while (current != node1) {
+            current = previous.get(current);
+            // head insertion method
+            path.insert(0, current.getName() + " -> ");
+        }
+        return path.toString();
     }
 
     public String randomWalk(){
