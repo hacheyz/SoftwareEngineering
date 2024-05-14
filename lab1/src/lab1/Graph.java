@@ -130,6 +130,45 @@ public class Graph {
         return newSentence;
     }
 
+    private record DijkstraResult(Map<Node, Integer> distance, Map<Node, Node> previous) {
+    }
+
+    private DijkstraResult dijkstra(Node startNode) {
+        Map<Node, Integer> distance = new HashMap<>();
+        Map<Node, Node> previous = new HashMap<>();
+        ArrayList<Node> visited = new ArrayList<>();
+        for (Node node : nodes.values()) {
+            distance.put(node, Integer.MAX_VALUE);
+            previous.put(node, null);
+        }
+        distance.put(startNode, 0);
+        while (visited.size() < nodes.size()) {
+            // find the node with the minimum distance
+            Node minNode = null;
+            int minDistance = Integer.MAX_VALUE;
+            for (Node node : nodes.values()) {
+                if (!visited.contains(node) && distance.get(node) < minDistance) {
+                    minNode = node;
+                    minDistance = distance.get(node);
+                }
+            }
+            if (minNode == null) {
+                break;
+            }
+            visited.add(minNode);
+            // update the distance of the neighbors of the minNode
+            Map<Node, Integer> minNodeEdges = edges.get(minNode);
+            for (Node neighbor : minNodeEdges.keySet()) {
+                int weight = minNodeEdges.get(neighbor);
+                if (distance.get(minNode) + weight < distance.get(neighbor)) {
+                    distance.put(neighbor, distance.get(minNode) + weight);
+                    previous.put(neighbor, minNode);
+                }
+            }
+        }
+        return new DijkstraResult(distance, previous);
+    }
+
     // 功能需求5：计算两个单词之间的最短路径
     public String calcShortestPath(String word1, String word2) {
         /* Use Dijkstra to find the shortest path */
