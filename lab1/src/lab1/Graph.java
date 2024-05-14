@@ -1,8 +1,6 @@
 package lab1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Graph {
     private Map<String, Node> nodes;
@@ -282,5 +280,29 @@ public class Graph {
         }
         inputThread.interrupt();
         return walk.toString();
+    }
+
+    // overload toString() method
+    @Override
+    public String toString() {
+        StringBuilder graphString = new StringBuilder();
+        graphString.append("digraph G {\n");
+        for (Node source : edges.keySet()) {
+            Map<Node, Integer> sourceNodeEdges = edges.get(source);
+            for (Node target : sourceNodeEdges.keySet()) {
+                int weight = sourceNodeEdges.get(target);
+                graphString.append("  ").append(source.getName()).append(" -> ").append(target.getName()).append(" [label=\"").append(weight).append("\"];\n");
+            }
+        }
+        graphString.append("}");
+        return graphString.toString();
+    }
+
+    public Map<String, Node> getNodes() {
+        return nodes;
+    }
+
+    public Map<Node, Map<Node, Integer>> getEdges() {
+        return edges;
     }
 }
