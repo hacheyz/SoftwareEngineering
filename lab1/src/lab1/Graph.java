@@ -229,7 +229,58 @@ public class Graph {
         return path.toString();
     }
 
+    // 功能需求6：随机游走
+    private volatile boolean running = true;
     public String randomWalk(){
-        return null;
+        // pick a random node as the start node
+//        int randomIndex = (int)(Math.random() * nodes.size());
+//        Node startNode = (Node)nodes.values().toArray()[randomIndex];
+        Node startNode = getNode("to");
+        StringBuilder walk = new StringBuilder();
+        walk.append(startNode.getName());
+        // do random walk per 1s, until pass a visited edge, or reach a node without out-edges, or receive an Enter
+        Node currentNode = startNode;
+        Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
+        // 在一个新的线程中检测键盘输入
+        Thread inputThread = new Thread(() -> {
+            Scanner scanner = new Scanner(System.in);
+            while (running) {
+                String input = scanner.nextLine();
+                if (input.isEmpty()) {
+                    running = false;
+                    break;
+                }
+            }
+            scanner.close();
+        });
+        inputThread.start();
+        while (running) {
+            Map<Node, Integer> currentNodeEdges = edges.get(currentNode);
+            if (currentNodeEdges == null || currentNodeEdges.isEmpty()) {
+                running = false;
+                break;
+            }
+            int randomEdgeIndex = (int)(Math.random() * currentNodeEdges.size());
+            Node nextNode = (Node)currentNodeEdges.keySet().toArray()[randomEdgeIndex];
+            if (visited.get(currentNode) == null) {
+                visited.put(currentNode, new HashMap<>());
+            }
+            if (visited.get(currentNode).containsKey(nextNode)) {  // reach a duplicated edge
+                running = false;
+                break;
+            } else {
+                visited.get(currentNode).put(nextNode, true);
+                walk.append(" -> ").append(nextNode.getName());
+            }
+            currentNode = nextNode;
+            System.out.println(walk);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        inputThread.interrupt();
+        return walk.toString();
     }
 }
