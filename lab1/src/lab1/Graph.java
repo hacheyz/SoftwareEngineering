@@ -173,44 +173,47 @@ public class Graph {
     public String calcShortestPath(String word1, String word2) {
         /* Use Dijkstra to find the shortest path */
         StringBuilder path = new StringBuilder();
+        if (Objects.equals(word1, "") && Objects.equals(word2, "")) {
+            System.err.println("Please input at least one word!");
+            return null;
+        }
+        if (Objects.equals(word1, "")) {
+            // swap word1 and word2
+            String temp = word1;
+            word1 = word2;
+            word2 = temp;
+        }
+        // now word1 must not be empty, word2 may be empty
         Node node1 = getNode(word1);
         Node node2 = getNode(word2);
-        if (node1 == null || node2 == null) {
+        if (node1 == null || !Objects.equals(word2, "") && node2 == null) {
             System.err.println("No \"" + word1 + "\" or \"" + word2 + "\" in the graph!");
             return null;
         }
-        Map<Node, Integer> distance = new HashMap<>();
-        Map<Node, Node> previous = new HashMap<>();
-        ArrayList<Node> visited = new ArrayList<>();
-        for (Node node : nodes.values()) {
-            distance.put(node, Integer.MAX_VALUE);
-            previous.put(node, null);
-        }
-        distance.put(node1, 0);
-        while (visited.size() < nodes.size()) {
-            // find the node with the minimum distance
-            Node minNode = null;
-            int minDistance = Integer.MAX_VALUE;
-            for (Node node : nodes.values()) {
-                if (!visited.contains(node) && distance.get(node) < minDistance) {
-                    minNode = node;
-                    minDistance = distance.get(node);
+        // get the shortest paths from node1 to all other nodes
+        DijkstraResult result = dijkstra(node1);
+        Map<Node, Integer> distance = result.distance();
+        Map<Node, Node> previous = result.previous();
+        if (Objects.equals(word2, "")) {
+            // display all the shortest paths from node1
+            for (Node node : distance.keySet()) {
+                if (node != node1 && distance.get(node) != Integer.MAX_VALUE) {
+                    StringBuilder singlePath = new StringBuilder();
+                    Node current = node;
+                    singlePath.append(current.getName());
+                    while (current != node1) {
+                        current = previous.get(current);
+                        singlePath.insert(0, current.getName() + " -> ");
+                    }
+                    singlePath.append("\n");
+                    path.append(singlePath);
                 }
             }
-            if (minNode == null) {
-                System.err.println("No path from \"" + word1 + "\" to \"" + word2 + "\"!");
+            if (path.isEmpty()) {
+                System.err.println("No path from \"" + word1 + "\" to any other words!");
                 return null;
             }
-            visited.add(minNode);
-            // update the distance of the neighbors of the minNode
-            Map<Node, Integer> minNodeEdges = edges.get(minNode);
-            for (Node neighbor : minNodeEdges.keySet()) {
-                int weight = minNodeEdges.get(neighbor);
-                if (distance.get(minNode) + weight < distance.get(neighbor)) {
-                    distance.put(neighbor, distance.get(minNode) + weight);
-                    previous.put(neighbor, minNode);
-                }
-            }
+            return path.toString();
         }
         if (distance.get(node2) == Integer.MAX_VALUE) {
             System.err.println("No path from \"" + word1 + "\" to \"" + word2 + "\"!");
