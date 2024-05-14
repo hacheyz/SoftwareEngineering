@@ -46,6 +46,23 @@ public class Main {
         System.out.println("加入桥接词后的新文本: ");
         System.out.println(newText);
 
+        // 计算最短路径
+        System.out.println("**********************************************");
+        System.out.println("请输入word1: ");
+        String start = scanner.nextLine();
+        System.out.println("请输入word2: ");
+        String end = scanner.nextLine();
+        String shortestPath = g.calcShortestPath(start, end);
+        if (shortestPath != null) {
+            System.out.println(shortestPath);
+        }
+
+        // 随机游走
+        System.out.println("**********************************************");
+        String walk = g.randomWalk();
+        // write to file
+        MyUtils.writeWalkToFile(walk, "./output/random_walk.txt");
+        System.exit(0);
     }
 
 }
