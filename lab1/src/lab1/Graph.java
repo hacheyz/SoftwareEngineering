@@ -67,7 +67,7 @@ public class Graph {
         Node node2 = getNode(word2);
         ArrayList<String> word3List = new ArrayList<>();
         if(node1 == null || node2 == null){
-            System.out.println("No \"" + word1 + "\" or \"" + word2 + "\" in the graph!");
+            System.err.println("No \"" + word1 + "\" or \"" + word2 + "\" in the graph!");
             return null;
         }
         Map<Node, Integer> node1Edges = edges.get(node1);
@@ -79,7 +79,7 @@ public class Graph {
         }
 
         if(word3List.size() == 0){
-            System.out.println("No bridge words from \"" + word1 + "\" to \"" + word2 + "\"!");
+            System.err.println("No bridge words from \"" + word1 + "\" to \"" + word2 + "\"!");
             return null;
         }
         else {
