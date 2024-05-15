@@ -71,7 +71,7 @@ public class Graph {
         Map<Node, Integer> node1Edges = edges.get(node1);
         for (Node node3 : node1Edges.keySet()){
             Map<Node, Integer> node3Edges = edges.get(node3);
-            if(node3Edges!=null && node3Edges.containsKey(node2)){
+            if(node3Edges != null && node3Edges.containsKey(node2)){
                 word3List.add(node3.getName());
             }
         }
@@ -101,7 +101,7 @@ public class Graph {
         Map<Node, Integer> node1Edges = edges.get(node1);
         for (Node node3 : node1Edges.keySet()){
             Map<Node, Integer> node3Edges = edges.get(node3);
-            if(node3Edges!=null && node3Edges.containsKey(node2)){
+            if(node3Edges != null && node3Edges.containsKey(node2)){
                 word3List.add(node3.getName());
             }
         }
