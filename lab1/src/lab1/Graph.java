@@ -257,6 +257,10 @@ public class Graph {
         Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            System.out.print(walk);
+            if (scanner.nextLine().equals("q")) {
+                break;
+            }
             Map<Node, Integer> currentNodeEdges = edges.get(currentNode);
             if (currentNodeEdges == null || currentNodeEdges.isEmpty()) {
                 break;
@@ -279,10 +283,6 @@ public class Graph {
                 walk.append(" -> ").append(nextNode.getName());
             }
             currentNode = nextNode;
-            System.out.print(walk);
-            if (scanner.nextLine().equals("q")) {
-                break;
-            }
         }
         return walk.toString();
     }
