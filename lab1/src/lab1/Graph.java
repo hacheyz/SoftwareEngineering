@@ -231,9 +231,8 @@ public class Graph {
     private volatile boolean running = true;
     public String randomWalk(){
         // pick a random node as the start node
-//        int randomIndex = (int)(Math.random() * nodes.size());
-//        Node startNode = (Node)nodes.values().toArray()[randomIndex];
-        Node startNode = getNode("to");
+        int randomIndex = (int)(Math.random() * nodes.size());
+        Node startNode = (Node)nodes.values().toArray()[randomIndex];
         StringBuilder walk = new StringBuilder();
         walk.append(startNode.getName());
         // do random walk per 1s, until pass a visited edge, or reach a node without out-edges, or receive an Enter
