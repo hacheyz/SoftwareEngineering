@@ -128,6 +128,8 @@ public class Graph {
         return newSentence;
     }
 
+    // distance: 从起始节点到其他节点的最短距离。
+    // previous: 最短路径中每个节点的前驱节点，用于重建路径。
     private record DijkstraResult(Map<Node, Integer> distance, Map<Node, Node> previous) {
     }
 
@@ -135,11 +137,14 @@ public class Graph {
         Map<Node, Integer> distance = new HashMap<>();
         Map<Node, Node> previous = new HashMap<>();
         ArrayList<Node> visited = new ArrayList<>();
+
+        // 初始化距离为无穷大
         for (Node node : nodes.values()) {
             distance.put(node, Integer.MAX_VALUE);
             previous.put(node, null);
         }
         distance.put(startNode, 0);
+
         while (visited.size() < nodes.size()) {
             // find the node with the minimum distance
             Node minNode = null;
@@ -164,6 +169,7 @@ public class Graph {
                 }
             }
         }
+
         return new DijkstraResult(distance, previous);
     }
 
@@ -192,8 +198,9 @@ public class Graph {
         DijkstraResult result = dijkstra(node1);
         Map<Node, Integer> distance = result.distance();
         Map<Node, Node> previous = result.previous();
+
+        // if word2 is empty, display all the shortest paths from node1
         if (Objects.equals(word2, "")) {
-            // display all the shortest paths from node1
             for (Node node : distance.keySet()) {
                 if (node != node1 && distance.get(node) != Integer.MAX_VALUE) {
                     StringBuilder singlePath = new StringBuilder();
@@ -203,6 +210,8 @@ public class Graph {
                         current = previous.get(current);
                         singlePath.insert(0, current.getName() + " -> ");
                     }
+                    // 展示最短的路径长度
+                    singlePath.append(", length = " + distance.get(node));
                     singlePath.append("\n");
                     path.append(singlePath);
                 }
@@ -213,10 +222,12 @@ public class Graph {
             }
             return path.toString();
         }
+
         if (distance.get(node2) == Integer.MAX_VALUE) {
             System.err.println("No path from \"" + word1 + "\" to \"" + word2 + "\"!");
             return null;
         }
+
         Node current = node2;
         path.append(current.getName());
         while (current != node1) {
@@ -224,6 +235,7 @@ public class Graph {
             // head insertion method
             path.insert(0, current.getName() + " -> ");
         }
+        path.append(", length = " + distance.get(node2));
         return path.toString();
     }
 
@@ -237,8 +249,9 @@ public class Graph {
         walk.append(startNode.getName());
         // do random walk per 1s, until pass a visited edge, or reach a node without out-edges, or receive an Enter
         Node currentNode = startNode;
+        // 记录边是否被访问过
         Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
-        // 在一个新的线程中检测键盘输入
+        // 在一个新的线程中检测键盘输入，检测到用户输入的换行后，随机游走会被终止
         Thread inputThread = new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
             while (running) {
@@ -257,12 +270,18 @@ public class Graph {
                 running = false;
                 break;
             }
+            // 随机选取一条边
             int randomEdgeIndex = (int)(Math.random() * currentNodeEdges.size());
             Node nextNode = (Node)currentNodeEdges.keySet().toArray()[randomEdgeIndex];
+
             if (visited.get(currentNode) == null) {
                 visited.put(currentNode, new HashMap<>());
             }
-            if (visited.get(currentNode).containsKey(nextNode)) {  // reach a duplicated edge
+            // reach a duplicated edge
+            if (visited.get(currentNode).containsKey(nextNode)) {
+                // 最后一条重复的边也输出
+                walk.append(" -> ").append(nextNode.getName());
+                System.out.println(walk);
                 running = false;
                 break;
             } else {

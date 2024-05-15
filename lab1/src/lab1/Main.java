@@ -30,6 +30,7 @@ public class Main {
 
         // 查询桥接词
         System.out.println("**********************************************");
+        System.out.println("查询桥接词：");
         Scanner scanner = new Scanner(System.in);
         System.out.println("请输入word1: ");
         String word1 = scanner.nextLine();      // to
@@ -42,6 +43,7 @@ public class Main {
 
         // 根据桥接词生成新的文本
         System.out.println("**********************************************");
+        System.out.println("根据桥接词生成新的文本");
         System.out.println("请输入需要改造的文本: ");
         String inputText =  scanner.nextLine();
         String newText = g.generateNewText(inputText);
@@ -50,6 +52,7 @@ public class Main {
 
         // 计算最短路径
         System.out.println("**********************************************");
+        System.out.println("计算两个词的最短路径：");
         System.out.println("请输入word1: ");
         String start = scanner.nextLine();
         System.out.println("请输入word2: ");
@@ -61,6 +64,7 @@ public class Main {
 
         // 随机游走
         System.out.println("**********************************************");
+        System.out.println("随机游走：");
         String walk = g.randomWalk();
         // write to file
         MyUtils.writeWalkToFile(walk, "./output/random_walk.txt");
