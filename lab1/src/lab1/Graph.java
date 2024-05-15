@@ -245,41 +245,20 @@ public class Graph {
     }
 
     // 功能需求6：随机游走
-    private volatile boolean running = true;
     public String randomWalk(){
         // pick a random node as the start node
         int randomIndex = (int)(Math.random() * nodes.size());
         Node startNode = (Node)nodes.values().toArray()[randomIndex];
         StringBuilder walk = new StringBuilder();
         walk.append(startNode.getName());
-        // do random walk per 1s, until pass a visited edge, or reach a node without out-edges, or receive an Enter
+        // do random walk when receive Enter, until pass a visited edge, or reach a node without out-edges, or receive 'q'
         Node currentNode = startNode;
         // 记录边是否被访问过
         Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
-        // 在一个新的线程中检测键盘输入，检测到用户输入的换行后，随机游走会被终止
-        Thread inputThread = new Thread(() -> {
-            Scanner scanner2 = new Scanner(System.in);
-                while (running) {
-                    if (scanner2.hasNextLine()) {
-//                        scanner2.nextLine();
-                        System.out.println("1");
-                        running = false;
-                        break;
-                    }
-//                    String input = scanner2.nextLine();
-//                    if (input.isEmpty()) {
-//                        System.out.println("2");
-//                        running = false;
-//                        break;
-//                    }
-                }
-        });
-
-        inputThread.start();
-        while (running) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
             Map<Node, Integer> currentNodeEdges = edges.get(currentNode);
             if (currentNodeEdges == null || currentNodeEdges.isEmpty()) {
-                running = false;
                 break;
             }
             // 随机选取一条边
@@ -294,28 +273,17 @@ public class Graph {
                 // 最后一条重复的边也输出
                 walk.append(" -> ").append(nextNode.getName());
                 System.out.println(walk);
-                running = false;
                 break;
             } else {
                 visited.get(currentNode).put(nextNode, true);
                 walk.append(" -> ").append(nextNode.getName());
             }
             currentNode = nextNode;
-            System.out.println(walk);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            System.out.print(walk);
+            if (scanner.nextLine().equals("q")) {
+                break;
             }
         }
-        inputThread.interrupt();
-
-        try {
-            inputThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         return walk.toString();
     }
 
