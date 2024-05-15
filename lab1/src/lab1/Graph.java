@@ -7,6 +7,8 @@ public class Graph {
     // 相当于邻接表
     private Map<Node, Map<Node, Integer>> edges;
 
+//    private static  Scanner scanner = new Scanner(System.in);
+
     public Graph() {
         this.nodes = new HashMap<>();
         this.edges = new HashMap<>();
@@ -256,16 +258,23 @@ public class Graph {
         Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
         // 在一个新的线程中检测键盘输入，检测到用户输入的换行后，随机游走会被终止
         Thread inputThread = new Thread(() -> {
-            Scanner scanner = new Scanner(System.in);
-            while (running) {
-                String input = scanner.nextLine();
-                if (input.isEmpty()) {
-                    running = false;
-                    break;
+            Scanner scanner2 = new Scanner(System.in);
+                while (running) {
+                    if (scanner2.hasNextLine()) {
+//                        scanner2.nextLine();
+                        System.out.println("1");
+                        running = false;
+                        break;
+                    }
+//                    String input = scanner2.nextLine();
+//                    if (input.isEmpty()) {
+//                        System.out.println("2");
+//                        running = false;
+//                        break;
+//                    }
                 }
-            }
-            scanner.close();
         });
+
         inputThread.start();
         while (running) {
             Map<Node, Integer> currentNodeEdges = edges.get(currentNode);
@@ -300,6 +309,13 @@ public class Graph {
             }
         }
         inputThread.interrupt();
+
+        try {
+            inputThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return walk.toString();
     }
 
