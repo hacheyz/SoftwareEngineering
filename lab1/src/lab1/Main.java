@@ -24,8 +24,13 @@ public class Main {
         // 利用words构建有向图并展示
         Graph g = new Graph(words);
 
+        // 创建output文件夹用于保存输出结果
+        MyUtils.checkAndCreateFolder("./output");
+
         Scanner scanner = new Scanner(System.in);
-        while(true){
+        boolean flag = true;
+
+        while(flag){
             System.out.println("**********************************************");
             System.out.println("请选择一个功能:");
             System.out.println("1. 展示有向图");
@@ -97,9 +102,8 @@ public class Main {
                     MyUtils.writeWalkToFile(walk, "./output/random_walk.txt");
                     break;
                 case 6:
-                    System.out.println("退出程序");
-                    scanner.close();
-                    System.exit(0);
+                    System.out.println("退出程序。");
+                    flag = false;
                     break;
                 default:
                     System.out.println("无效选择，请重新输入。");

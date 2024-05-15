@@ -40,4 +40,19 @@ public class MyUtils {
             e.printStackTrace();
         }
     }
+
+    // 检查文件夹是否存在，若不存在则创建。
+    public static void checkAndCreateFolder(String path) {
+        File outputFolder = new File(path);
+        if (!outputFolder.exists()) {
+            boolean created = outputFolder.mkdirs();
+            if (created) {
+                System.out.println("文件夹\"" + path + "\"已成功创建。");
+            } else {
+                System.out.println("文件夹\"" + path + "\"创建失败。");
+            }
+        } else {
+            System.out.println("文件夹\""+ path + "已存在。");
+        }
+    }
 }
