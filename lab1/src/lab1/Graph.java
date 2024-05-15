@@ -161,6 +161,9 @@ public class Graph {
             visited.add(minNode);
             // update the distance of the neighbors of the minNode
             Map<Node, Integer> minNodeEdges = edges.get(minNode);
+            if (minNodeEdges == null) {
+                continue;
+            }
             for (Node neighbor : minNodeEdges.keySet()) {
                 int weight = minNodeEdges.get(neighbor);
                 if (distance.get(minNode) + weight < distance.get(neighbor)) {
