@@ -297,12 +297,4 @@ public class Graph {
         graphString.append("}");
         return graphString.toString();
     }
-
-    public Map<String, Node> getNodes() {
-        return nodes;
-    }
-
-    public Map<Node, Map<Node, Integer>> getEdges() {
-        return edges;
-    }
 }
