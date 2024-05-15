@@ -101,7 +101,7 @@ public class Graph {
         Map<Node, Integer> node1Edges = edges.get(node1);
         for (Node node3 : node1Edges.keySet()){
             Map<Node, Integer> node3Edges = edges.get(node3);
-            if(node3Edges.containsKey(node2)){
+            if(node3Edges != null && node3Edges.containsKey(node2)){
                 word3List.add(node3.getName());
             }
         }
@@ -161,6 +161,9 @@ public class Graph {
             visited.add(minNode);
             // update the distance of the neighbors of the minNode
             Map<Node, Integer> minNodeEdges = edges.get(minNode);
+            if (minNodeEdges == null) {
+                continue;
+            }
             for (Node neighbor : minNodeEdges.keySet()) {
                 int weight = minNodeEdges.get(neighbor);
                 if (distance.get(minNode) + weight < distance.get(neighbor)) {
