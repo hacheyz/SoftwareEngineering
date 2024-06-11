@@ -1,20 +1,34 @@
 package lab1;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
 
+
+/**
+ * The Graph class represents a directed graph constructed from a list of words.
+ * It provides methods to add nodes, display edges, query bridge words, generate new text,
+ * calculate the shortest path between words, and perform a random walk.
+ */
 public class Graph {
   private Map<String, Node> nodes;
-  // 相当于邻接表
   private Map<Node, Map<Node, Integer>> edges;
 
-  //    private static  Scanner scanner = new Scanner(System.in);
-
+  /**
+   * Constructs an empty Graph.
+   */
   public Graph() {
     this.nodes = new HashMap<>();
     this.edges = new HashMap<>();
   }
 
-  // 功能需求1：通过读入的文本生成有向图
+  /**
+   * Constructs a Graph from an array of words.
+   *
+   * @param words the array of words to construct the graph from
+   */
   public Graph(String[] words) {
     this();
     for (int i = 0; i < words.length - 1; i++) {
@@ -30,7 +44,6 @@ public class Graph {
       Node sourceNode = getNode(sourceName);
       Node targetNode = getNode(targetName);
 
-      // 获取与sourceNode相关联的边集（Map<Node, Integer>），如果没有则创建新的
       Map<Node, Integer> sourceNodeEdges = edges.get(sourceNode);
       if (sourceNodeEdges == null) {
         sourceNodeEdges = new HashMap<>();
@@ -42,26 +55,49 @@ public class Graph {
     }
   }
 
+  /**
+   * Adds a node with the given name to the graph.
+   *
+   * @param name the name of the node to add
+   */
   public void addNode(String name) {
     nodes.put(name, new Node(name));
   }
 
+  /**
+   * Retrieves the node with the given name from the graph.
+   *
+   * @param name the name of the node to retrieve
+   * @return the node with the specified name, or null if no such node exists
+   */
   public Node getNode(String name) {
     return nodes.get(name);
   }
 
+  /**
+   * Displays the edges of the graph.
+   * <p>
+   * Each edge is printed in the format "source -> target (weight: weight)".
+   * </p>
+   */
   public void displayEdges() {
     for (Node source : edges.keySet()) {
       Map<Node, Integer> sourceNodeEdges = edges.get(source);
       for (Node target : sourceNodeEdges.keySet()) {
         int weight = sourceNodeEdges.get(target);
-        System.out.println(source.getName() + " -> " + target.getName() + " (weight: " + weight + ")");
+        System.out.println(source.getName() + " -> "
+                + target.getName() + " (weight: " + weight + ")");
       }
     }
   }
 
-  // word1 -> word3 -> word2, return word3List
-  // 功能需求3：返回所有的桥接词，如果有多个通过空格分割，再拼接
+  /**
+   * Returns all bridge words between word1 and word2, joined by spaces.
+   *
+   * @param word1 the source word
+   * @param word2 the target word
+   * @return a space-separated string of bridge words, or null if no bridge words exist
+   */
   public String queryBridgeWords(String word1, String word2) {
     Node node1 = getNode(word1);
     Node node2 = getNode(word2);
@@ -78,24 +114,27 @@ public class Graph {
       }
     }
 
-    if (word3List.size() == 0) {
+    if (word3List.isEmpty()) {
       System.err.println("No bridge words from \"" + word1 + "\" to \"" + word2 + "\"!");
       return null;
     } else {
-      String words = "";
-      for (int i = 0; i < word3List.size(); ++i) {
-        words = words + word3List.get(i) + " ";
-      }
-      return words;
+      return String.join(" ", word3List);
     }
   }
 
-  // word1 -> word3 -> word2, return 1 word3 only
-  // 如果有多个桥接词，只返回第一个，功能需求4中需要调用
+  /**
+   * Returns the first bridge word between word1 and word2.
+   * <p>
+   * If there are multiple bridge words, only the first one is returned.
+   * </p>
+   *
+   * @param word1 the source word
+   * @param word2 the target word
+   * @return the first bridge word, or null if no bridge word exists
+   */
   public String queryBridgeWord(String word1, String word2) {
     Node node1 = getNode(word1);
     Node node2 = getNode(word2);
-    ArrayList<String> word3List = new ArrayList<>();
     if (node1 == null || node2 == null) {
       return null;
     }
@@ -103,107 +142,61 @@ public class Graph {
     for (Node node3 : node1Edges.keySet()) {
       Map<Node, Integer> node3Edges = edges.get(node3);
       if (node3Edges != null && node3Edges.containsKey(node2)) {
-        word3List.add(node3.getName());
+        return node3.getName();
       }
     }
-
-    if (word3List.size() == 0) {
-      return null;
-    } else {
-      return word3List.get(0);
-    }
+    return null;
   }
 
-  // 功能需求4：根据桥接词生成新文本
+  /**
+   * Generates a new text by inserting bridge words between adjacent words in the input text.
+   *
+   * @param inputText the input text to transform
+   * @return the new text with bridge words inserted
+   */
   public String generateNewText(String inputText) {
     String[] inputWords = inputText.split("\\s+");
-    String newSentence = "";
+    StringBuilder newSentence = new StringBuilder();
     for (int i = 0; i < inputWords.length - 1; ++i) {
-      newSentence += inputWords[i] + " ";
-      String bridgeWord = queryBridgeWord(inputWords[i].toLowerCase(), inputWords[i + 1].toLowerCase());
+      newSentence.append(inputWords[i]).append(" ");
+      String bridgeWord =
+              queryBridgeWord(inputWords[i].toLowerCase(), inputWords[i + 1].toLowerCase());
       if (bridgeWord != null) {
-        newSentence += (bridgeWord + " ");
+        newSentence.append(bridgeWord).append(" ");
       }
     }
-    newSentence += inputWords[inputWords.length - 1];
-    return newSentence;
+    newSentence.append(inputWords[inputWords.length - 1]);
+    return newSentence.toString();
   }
 
-  // distance: 从起始节点到其他节点的最短距离。
-  // previous: 最短路径中每个节点的前驱节点，用于重建路径。
-  private record DijkstraResult(Map<Node, Integer> distance, Map<Node, Node> previous) {
-  }
-
-  private DijkstraResult dijkstra(Node startNode) {
-    Map<Node, Integer> distance = new HashMap<>();
-    Map<Node, Node> previous = new HashMap<>();
-    ArrayList<Node> visited = new ArrayList<>();
-
-    // 初始化距离为无穷大
-    for (Node node : nodes.values()) {
-      distance.put(node, Integer.MAX_VALUE);
-      previous.put(node, null);
-    }
-    distance.put(startNode, 0);
-
-    while (visited.size() < nodes.size()) {
-      // find the node with the minimum distance
-      Node minNode = null;
-      int minDistance = Integer.MAX_VALUE;
-      for (Node node : nodes.values()) {
-        if (!visited.contains(node) && distance.get(node) < minDistance) {
-          minNode = node;
-          minDistance = distance.get(node);
-        }
-      }
-      if (minNode == null) {
-        break;
-      }
-      visited.add(minNode);
-      // update the distance of the neighbors of the minNode
-      Map<Node, Integer> minNodeEdges = edges.get(minNode);
-      if (minNodeEdges == null) {
-        continue;
-      }
-      for (Node neighbor : minNodeEdges.keySet()) {
-        int weight = minNodeEdges.get(neighbor);
-        if (distance.get(minNode) + weight < distance.get(neighbor)) {
-          distance.put(neighbor, distance.get(minNode) + weight);
-          previous.put(neighbor, minNode);
-        }
-      }
-    }
-
-    return new DijkstraResult(distance, previous);
-  }
-
-  // 功能需求5：计算两个单词之间的最短路径
+  /**
+   * Calculates the shortest path between two words using Dijkstra's algorithm.
+   *
+   * @param word1 the start word
+   * @param word2 the end word
+   * @return a string representing the shortest path, or null if no path exists
+   */
   public String calcShortestPath(String word1, String word2) {
-    /* Use Dijkstra to find the shortest path */
     StringBuilder path = new StringBuilder();
     if (Objects.equals(word1, "") && Objects.equals(word2, "")) {
       System.err.println("Please input at least one word!");
       return null;
     }
     if (Objects.equals(word1, "")) {
-      // swap word1 and word2
       String temp = word1;
       word1 = word2;
       word2 = temp;
     }
-    // now word1 must not be empty, word2 may be empty
     Node node1 = getNode(word1);
     Node node2 = getNode(word2);
-    if (node1 == null || !Objects.equals(word2, "") && node2 == null) {
+    if (node1 == null || (!Objects.equals(word2, "") && node2 == null)) {
       System.err.println("No \"" + word1 + "\" or \"" + word2 + "\" in the graph!");
       return null;
     }
-    // get the shortest paths from node1 to all other nodes
     DijkstraResult result = dijkstra(node1);
     Map<Node, Integer> distance = result.distance();
     Map<Node, Node> previous = result.previous();
 
-    // if word2 is empty, display all the shortest paths from node1
     if (Objects.equals(word2, "")) {
       for (Node node : distance.keySet()) {
         if (node != node1 && distance.get(node) != Integer.MAX_VALUE) {
@@ -214,9 +207,7 @@ public class Graph {
             current = previous.get(current);
             singlePath.insert(0, current.getName() + " -> ");
           }
-          // 展示最短的路径长度
-          singlePath.append(", length = " + distance.get(node));
-          singlePath.append("\n");
+          singlePath.append(", length = ").append(distance.get(node)).append("\n");
           path.append(singlePath);
         }
       }
@@ -236,23 +227,28 @@ public class Graph {
     path.append(current.getName());
     while (current != node1) {
       current = previous.get(current);
-      // head insertion method
       path.insert(0, current.getName() + " -> ");
     }
-    path.append(", length = " + distance.get(node2));
+    path.append(", length = ").append(distance.get(node2));
     return path.toString();
   }
 
-  // 功能需求6：随机游走
+  /**
+   * Performs a random walk starting from a random node.
+   * <p>
+   * The walk continues until a visited edge is encountered,
+   * a node without out-edges is reached,
+   * or 'q' is entered.
+   * </p>
+   *
+   * @return a string representing the random walk
+   */
   public String randomWalk() {
-    // pick a random node as the start node
     int randomIndex = (int) (Math.random() * nodes.size());
     Node startNode = (Node) nodes.values().toArray()[randomIndex];
     StringBuilder walk = new StringBuilder();
     walk.append(startNode.getName());
-    // do random walk when receive Enter, until pass a visited edge, or reach a node without out-edges, or receive 'q'
     Node currentNode = startNode;
-    // 记录边是否被访问过
     Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
     Scanner scanner = new Scanner(System.in);
     while (true) {
@@ -264,16 +260,13 @@ public class Graph {
       if (currentNodeEdges == null || currentNodeEdges.isEmpty()) {
         break;
       }
-      // 随机选取一条边
       int randomEdgeIndex = (int) (Math.random() * currentNodeEdges.size());
       Node nextNode = (Node) currentNodeEdges.keySet().toArray()[randomEdgeIndex];
 
       if (visited.get(currentNode) == null) {
         visited.put(currentNode, new HashMap<>());
       }
-      // reach a duplicated edge
       if (visited.get(currentNode).containsKey(nextNode)) {
-        // 最后一条重复的边也输出
         walk.append(" -> ").append(nextNode.getName());
         System.out.println(walk);
         break;
@@ -286,7 +279,11 @@ public class Graph {
     return walk.toString();
   }
 
-  // overload toString() method
+  /**
+   * Returns a string representation of the graph in DOT format.
+   *
+   * @return a DOT format string representing the graph
+   */
   @Override
   public String toString() {
     StringBuilder graphString = new StringBuilder();
@@ -295,10 +292,67 @@ public class Graph {
       Map<Node, Integer> sourceNodeEdges = edges.get(source);
       for (Node target : sourceNodeEdges.keySet()) {
         int weight = sourceNodeEdges.get(target);
-        graphString.append("  ").append(source.getName()).append(" -> ").append(target.getName()).append(" [label=\"").append(weight).append("\"];\n");
+        graphString.append("  ").append(source.getName())
+                .append(" -> ").append(target.getName())
+                .append(" [label=\"")
+                .append(weight).append("\"];\n");
       }
     }
     graphString.append("}");
     return graphString.toString();
+  }
+
+  // Helper methods for Dijkstra's algorithm
+
+  /**
+   * Helper class to store the results of Dijkstra's algorithm.
+   */
+  private record DijkstraResult(Map<Node, Integer> distance, Map<Node, Node> previous) {
+  }
+
+  /**
+   * Performs Dijkstra's algorithm to find the shortest paths from a start node to all other nodes.
+   *
+   * @param startNode the starting node
+   * @return a DijkstraResult containing the distances and previous nodes for the shortest paths
+   */
+  private DijkstraResult dijkstra(Node startNode) {
+    Map<Node, Integer> distance = new HashMap<>();
+    Map<Node, Node> previous = new HashMap<>();
+    ArrayList<Node> visited = new ArrayList<>();
+
+    for (Node node : nodes.values()) {
+      distance.put(node, Integer.MAX_VALUE);
+      previous.put(node, null);
+    }
+    distance.put(startNode, 0);
+
+    while (visited.size() < nodes.size()) {
+      Node minNode = null;
+      int minDistance = Integer.MAX_VALUE;
+      for (Node node : nodes.values()) {
+        if (!visited.contains(node) && distance.get(node) < minDistance) {
+          minNode = node;
+          minDistance = distance.get(node);
+        }
+      }
+      if (minNode == null) {
+        break;
+      }
+      visited.add(minNode);
+      Map<Node, Integer> minNodeEdges = edges.get(minNode);
+      if (minNodeEdges == null) {
+        continue;
+      }
+      for (Node neighbor : minNodeEdges.keySet()) {
+        int weight = minNodeEdges.get(neighbor);
+        if (distance.get(minNode) + weight < distance.get(neighbor)) {
+          distance.put(neighbor, distance.get(minNode) + weight);
+          previous.put(neighbor, minNode);
+        }
+      }
+    }
+
+    return new DijkstraResult(distance, previous);
   }
 }

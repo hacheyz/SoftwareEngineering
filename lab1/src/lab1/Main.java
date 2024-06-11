@@ -2,14 +2,37 @@ package lab1;
 
 import java.util.Scanner;
 
+/**
+ * Main class to demonstrate various functionalities for handling directed graphs.
+ * <p>
+ * The functionalities include displaying the directed graph, querying bridge words,
+ * generating new text based on bridge words, calculating the shortest path between
+ * two words, and performing a random walk on the graph.
+ * </p>
+ */
 public class Main {
-  // 功能需求2：展示有向图
+
+  /**
+   * Displays the directed graph.
+   *
+   * @param g the graph to be displayed
+   */
   public static void showDirectedGraph(Graph g) {
     System.out.println("有向图: ");
     g.displayEdges();
   }
 
-
+  /**
+   * Main method to execute the program.
+   * <p>
+   * The method reads words from a file, constructs a directed graph, creates an output
+   * folder, and provides a menu for the user to choose various functionalities such as
+   * displaying the graph, querying bridge words, generating new text, calculating the
+   * shortest path, and performing a random walk.
+   * </p>
+   *
+   * @param args command-line arguments
+   */
   public static void main(String[] args) {
     // 读取文件，得到String[] words
     String[] words = MyUtils.readFile("./src/hello.txt");
