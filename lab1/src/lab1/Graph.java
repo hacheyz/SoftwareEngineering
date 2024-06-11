@@ -1,5 +1,6 @@
 package lab1;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,12 +82,14 @@ public class Graph {
    * </p>
    */
   public void displayEdges() {
-    for (Node source : edges.keySet()) {
-      Map<Node, Integer> sourceNodeEdges = edges.get(source);
-      for (Node target : sourceNodeEdges.keySet()) {
-        int weight = sourceNodeEdges.get(target);
+    for (Map.Entry<Node, Map<Node, Integer>> entry : edges.entrySet()) {
+      Node source = entry.getKey();
+      Map<Node, Integer> sourceNodeEdges = entry.getValue();
+      for (Map.Entry<Node, Integer> edgeEntry : sourceNodeEdges.entrySet()) {
+        Node target = edgeEntry.getKey();
+        int weight = edgeEntry.getValue();
         System.out.println(source.getName() + " -> "
-                + target.getName() + " (weight: " + weight + ")");
+            + target.getName() + " (weight: " + weight + ")");
       }
     }
   }
@@ -250,7 +253,7 @@ public class Graph {
     walk.append(startNode.getName());
     Node currentNode = startNode;
     Map<Node, Map<Node, Boolean>> visited = new HashMap<>();
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
     while (true) {
       System.out.print(walk);
       if (scanner.nextLine().equals("q")) {
@@ -288,14 +291,16 @@ public class Graph {
   public String toString() {
     StringBuilder graphString = new StringBuilder();
     graphString.append("digraph G {\n");
-    for (Node source : edges.keySet()) {
-      Map<Node, Integer> sourceNodeEdges = edges.get(source);
-      for (Node target : sourceNodeEdges.keySet()) {
-        int weight = sourceNodeEdges.get(target);
+    for (Map.Entry<Node, Map<Node, Integer>> entry : edges.entrySet()) {
+      Node source = entry.getKey();
+      Map<Node, Integer> sourceNodeEdges = entry.getValue();
+      for (Map.Entry<Node, Integer> edgeEntry : sourceNodeEdges.entrySet()) {
+        Node target = edgeEntry.getKey();
+        int weight = edgeEntry.getValue();
         graphString.append("  ").append(source.getName())
-                .append(" -> ").append(target.getName())
-                .append(" [label=\"")
-                .append(weight).append("\"];\n");
+            .append(" -> ").append(target.getName())
+            .append(" [label=\"")
+            .append(weight).append("\"];\n");
       }
     }
     graphString.append("}");

@@ -2,6 +2,11 @@ package lab1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -26,7 +31,7 @@ public class MyUtils {
 
     try {
       File file = new File(fileName);
-      Scanner scanner = new Scanner(file);
+      Scanner scanner = new Scanner(file,  StandardCharsets.UTF_8.name());
       // 使用正则表达式替换非字母字符为空格，并且分割成单词
       while (scanner.hasNextLine()) {
         String line = scanner.nextLine().toLowerCase();
@@ -48,12 +53,10 @@ public class MyUtils {
    * @param path the path of the file to write to
    */
   public static void writeWalkToFile(String walk, String path) {
-    try {
-      File file = new File(path);
-      java.io.PrintWriter output = new java.io.PrintWriter(file);
-      output.print(walk);
-      output.close();
-    } catch (FileNotFoundException e) {
+    try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+        new FileOutputStream(path), "UTF-8"))) {
+      writer.print(walk);
+    } catch (UnsupportedEncodingException | FileNotFoundException e) {
       e.printStackTrace();
     }
   }

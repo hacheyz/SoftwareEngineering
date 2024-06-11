@@ -1,5 +1,6 @@
 package lab1;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
@@ -49,9 +50,8 @@ public class Main {
     // 创建output文件夹用于保存输出结果
     MyUtils.checkAndCreateFolder("./output");
 
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
     boolean flag = true;
-
     while (flag) {
       System.out.println("**********************************************");
       System.out.println("请选择一个功能:");
@@ -90,7 +90,7 @@ public class Main {
           String bridgeWords = g.queryBridgeWords(word1, word2);
           if (bridgeWords != null) {
             System.out.println("The bridge words from \""
-                    + word1 + "\" to \"" + word2 + "\" are: " + bridgeWords);
+                + word1 + "\" to \"" + word2 + "\" are: " + bridgeWords);
           }
           break;
         case 3:
