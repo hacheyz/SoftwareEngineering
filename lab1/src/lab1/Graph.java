@@ -1,6 +1,7 @@
 package lab1;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 public class Graph {
   private Map<String, Node> nodes;
   private Map<Node, Map<Node, Integer>> edges;
+  private SecureRandom random;
 
   /**
    * Constructs an empty Graph.
@@ -23,6 +25,7 @@ public class Graph {
   public Graph() {
     this.nodes = new HashMap<>();
     this.edges = new HashMap<>();
+    this.random = new SecureRandom();
   }
 
   /**
@@ -201,8 +204,10 @@ public class Graph {
     Map<Node, Node> previous = result.previous();
 
     if (Objects.equals(word2, "")) {
-      for (Node node : distance.keySet()) {
-        if (node != node1 && distance.get(node) != Integer.MAX_VALUE) {
+      for (Map.Entry<Node, Integer> entry : distance.entrySet()) {
+        Node node = entry.getKey();
+        int dist = entry.getValue();
+        if (node != node1 && dist != Integer.MAX_VALUE) {
           StringBuilder singlePath = new StringBuilder();
           Node current = node;
           singlePath.append(current.getName());
@@ -210,7 +215,7 @@ public class Graph {
             current = previous.get(current);
             singlePath.insert(0, current.getName() + " -> ");
           }
-          singlePath.append(", length = ").append(distance.get(node)).append("\n");
+          singlePath.append(", length = ").append(dist).append("\n");
           path.append(singlePath);
         }
       }
@@ -247,7 +252,9 @@ public class Graph {
    * @return a string representing the random walk
    */
   public String randomWalk() {
-    int randomIndex = (int) (Math.random() * nodes.size());
+//    int randomIndex = (int) (Math.random() * nodes.size());
+    int randomIndex = random.nextInt(nodes.size());
+
     Node startNode = (Node) nodes.values().toArray()[randomIndex];
     StringBuilder walk = new StringBuilder();
     walk.append(startNode.getName());
@@ -263,7 +270,9 @@ public class Graph {
       if (currentNodeEdges == null || currentNodeEdges.isEmpty()) {
         break;
       }
-      int randomEdgeIndex = (int) (Math.random() * currentNodeEdges.size());
+//      int randomEdgeIndex = (int) (Math.random() * currentNodeEdges.size());
+      int randomEdgeIndex = random.nextInt(currentNodeEdges.size());
+
       Node nextNode = (Node) currentNodeEdges.keySet().toArray()[randomEdgeIndex];
 
       if (visited.get(currentNode) == null) {
@@ -349,8 +358,9 @@ public class Graph {
       if (minNodeEdges == null) {
         continue;
       }
-      for (Node neighbor : minNodeEdges.keySet()) {
-        int weight = minNodeEdges.get(neighbor);
+      for (Map.Entry<Node, Integer> edgeEntry : minNodeEdges.entrySet()) {
+        Node neighbor = edgeEntry.getKey();
+        int weight = edgeEntry.getValue();
         if (distance.get(minNode) + weight < distance.get(neighbor)) {
           distance.put(neighbor, distance.get(minNode) + weight);
           previous.put(neighbor, minNode);
