@@ -252,7 +252,7 @@ public class Graph {
    * @return a string representing the random walk
    */
   public String randomWalk() {
-//    int randomIndex = (int) (Math.random() * nodes.size());
+
     int randomIndex = random.nextInt(nodes.size());
 
     Node startNode = (Node) nodes.values().toArray()[randomIndex];
@@ -270,7 +270,7 @@ public class Graph {
       if (currentNodeEdges == null || currentNodeEdges.isEmpty()) {
         break;
       }
-//      int randomEdgeIndex = (int) (Math.random() * currentNodeEdges.size());
+
       int randomEdgeIndex = random.nextInt(currentNodeEdges.size());
 
       Node nextNode = (Node) currentNodeEdges.keySet().toArray()[randomEdgeIndex];
