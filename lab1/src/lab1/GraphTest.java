@@ -21,7 +21,8 @@ public class GraphTest {
 
     // Test Case 3
     String result3 = g.queryBridgeWords("and", "of");
-    assertEquals("full think", result3);
+    assertTrue("Output should be either 'full think' or 'think full'",
+        result3.matches("full think") || result3.matches("think full"));
 
     // Test Case 4
     String result4 = g.queryBridgeWords("loved", "beauty");
