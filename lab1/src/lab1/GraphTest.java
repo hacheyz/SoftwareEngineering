@@ -28,4 +28,48 @@ public class GraphTest {
     String result4 = g.queryBridgeWords("loved", "beauty");
     assertEquals("your", result4);
   }
+
+  @Test
+  public void testGenerateNewText1() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 1: Input is empty string
+    assertEquals("", g.generateNewText(""));
+  }
+
+  @Test
+  public void testGenerateNewText2() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 2: Input is a single word "and"
+    assertEquals("and", g.generateNewText("and"));
+  }
+
+  @Test
+  public void testGenerateNewText3() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 3: Input with multiple words, some with bridge words
+    assertEquals("Your love fled and nodding by the fire",
+        g.generateNewText("Your love and by the fire"));
+  }
+
+  @Test
+  public void testGenerateNewText4() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 4: Input with punctuation and multiple words
+    assertEquals("Your love, and nodding by the fire",
+        g.generateNewText("Your love, and by the fire"));
+  }
+
+  @Test
+  public void testGenerateNewText5() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 5: Input with multiple words and multiple possible outputs
+    String result5 = g.generateNewText("When you are old and grey and of sleep");
+    assertTrue(result5.equals("When you are old and grey and full of sleep") ||
+        result5.equals("When you are old and grey and think of sleep"));
+  }
 }
