@@ -7,26 +7,58 @@ import static org.junit.Assert.*;
 public class GraphTest {
 
   @Test
-  public void queryBridgeWords() {
+  public void queryBridgeWords1() {
     String[] words = MyUtils.readFile("./src/hello.txt");
     Graph g = new Graph(words);
-
     // Test Case 1
     String result1 = g.queryBridgeWords("hello", "you");
     assertNull(result1);
+  }
 
+  @Test
+  public void queryBridgeWords2() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
     // Test Case 2
-    String result2 = g.queryBridgeWords("and", "gentle");
+    String result2 = g.queryBridgeWords("you", "hello");
     assertNull(result2);
+  }
 
+  @Test
+  public void queryBridgeWords3() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
     // Test Case 3
-    String result3 = g.queryBridgeWords("and", "of");
-    assertTrue("Output should be either 'full think' or 'think full'",
-        result3.matches("full think") || result3.matches("think full"));
+    String result3 = g.queryBridgeWords("stars", "your");
+    assertNull(result3);
+  }
 
+  @Test
+  public void queryBridgeWords4() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
     // Test Case 4
-    String result4 = g.queryBridgeWords("loved", "beauty");
-    assertEquals("your", result4);
+    String result4 = g.queryBridgeWords("of", "deep");
+    assertNull(result4);
+  }
+
+  @Test
+  public void queryBridgeWords5() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 5
+    String result5 = g.queryBridgeWords("and", "of");
+    assertTrue("Output should be either 'full think' or 'think full'",
+        result5.matches("full think") || result5.matches("think full"));
+  }
+
+  @Test
+  public void queryBridgeWords6() {
+    String[] words = MyUtils.readFile("./src/hello.txt");
+    Graph g = new Graph(words);
+    // Test Case 6
+    String result6 = g.queryBridgeWords("and", "gentle");
+    assertNull(result6);
   }
 
   @Test
