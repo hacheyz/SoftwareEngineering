@@ -101,7 +101,7 @@ public class GraphTest {
     Graph g = new Graph(words);
     // Test Case 5: Input with multiple words and multiple possible outputs
     String result5 = g.generateNewText("When you are old and grey and of sleep");
-    assertTrue(result5.equals("When you are old and grey and full of sleep") ||
-        result5.equals("When you are old and grey and think of sleep"));
+    assertTrue(result5.equals("When you are old and grey and full of sleep")
+        || result5.equals("When you are old and grey and think of sleep"));
   }
 }
