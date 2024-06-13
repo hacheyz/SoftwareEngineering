@@ -113,7 +113,7 @@ public class Graph {
       return null;
     }
     Map<Node, Integer> node1Edges = edges.get(node1);
-    if(node1Edges != null){
+    if (node1Edges != null) {
       for (Node node3 : node1Edges.keySet()) {
         Map<Node, Integer> node3Edges = edges.get(node3);
         if (node3Edges != null && node3Edges.containsKey(node2)) {
